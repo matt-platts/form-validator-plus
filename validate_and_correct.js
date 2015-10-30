@@ -20,8 +20,6 @@ function validator(){
 		rules['single_word'] = /^[a-zA-Z]+$/;
 		rules['single_word_hyphens'] = /^[a-zA-Z-]+$/;
 		rules['alphanumeric'] = /^[a-zA-Z0-9]+$/;
-		rules['date_dd_mm_yyyy'] = /^\d{2}(-|\/)\d{2}(-|\/)\d{4}$/;
-		rules['date_yyyy_mm_dd'] = /^\d{2}(-|\/)\d{2}(-|\/)\d{4}$/;
 		rules['userid'] = /^[A-Za-z0-9_]{3,20}$/; 
 		rules['password'] = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,30}$/;
 		rules['postcode'] = /^[a-zA-Z]{1,2}\d{1,2}\s?\d[a-zA-Z]{1,2}$/;
@@ -37,9 +35,38 @@ function validator(){
 			if (against=="creditcard"){
 				return _v.creditcard(input);
 			}
+			if(against=="date_dd_mm_yyyy" || against == "date_yyyy_mm_dd"){
+				return _v.validateDate(input,against);
+			}
 		}
 
 	}
+
+	validator.prototype.validateDate = function (input,format){
+
+		if (format=="date_dd_mm_yyyy"){
+			dateRegex = /^\d{2}(-|\/)\d{2}(-|\/)\d{4}$/;
+			var components = input.split(/[\/-]/);
+			var d = parseInt(components[0], 10);
+			var m = parseInt(components[1], 10);
+			var y = parseInt(components[2], 10);
+		} else {
+			dateRegex = /^\d{4}(-|\/)\d{2}(-|\/)\d{2}$/;
+			var components = input.split(/[\/-]/);
+			var y = parseInt(components[0], 10);
+			var m = parseInt(components[1], 10);
+			var d = parseInt(components[2], 10);
+		}
+
+		regex = new RegExp(dateRegex);
+		if (!regex.test(input)) { return false;}
+
+		var date = new Date(y+"/"+m+"/"+d);
+		m--; // because months are indexed from 0 not 1
+		// The return expression below checks that the y,m and d are the same when put into a new date object. This is because js automatically increments for illegal values = eg 31st september automatically becomes 1st octover. 
+		return date.getFullYear() == y && date.getMonth() == m && date.getDate() == d;
+	}
+
 
 	/* Auto correct functions - these return corrected input. */
 	validator.prototype.autocorrect = function (input,to){
