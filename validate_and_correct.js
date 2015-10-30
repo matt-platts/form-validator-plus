@@ -1,7 +1,7 @@
 
 /*
  * CLASS: validator
-   Allows validation (with true/false return) and auto-correction (removing disallowed characters) of strings
+   Allows validation (with true/false return) and auto-correction (removing disallowed characters or general formatting) of strings
 */
 function validator(){
 
@@ -84,13 +84,11 @@ function validator(){
 		return newName;
 	}
 
-	validator.prototype.capitalize_first = function(str){
-		return str.charAt(0).toUpperCase() + str.slice(1);
-	}
-
-	validator.prototype.capitalize = function (str){
-		return str.toUpperCase();
-	}
+	/* Function: postcode
+	 * Meta: Based on official royal mail suggestions
+	 * Expects: uk post code
+	 * Returns: correctly formatted postcode or false if input is not recognisable as a post code
+	*/
 
 	validator.prototype.postcode = function(str) {
 
@@ -373,15 +371,15 @@ function validator(){
 }
  
 /* Add to string prototype */
-String.prototype._validate = function(input,modifier){
+String.prototype._validate = function(modifier){
 	var _v = new validator();
-	return _v.validate(input,modifier);	
+	return _v.validate(this,modifier);	
 }
 
 /* Add to string prototype */
-String.prototype._autocorrect = function(input,modifier){
+String.prototype._autocorrect = function(modifier){
 	var _v = new validator();
-	return _v.autocorrect(input,modifier);	
+	return _v.autocorrect(this,modifier);	
 }
 
 var _v = new validator(); // if you don't want to use the string prototype directly, use _v.function(input,type);

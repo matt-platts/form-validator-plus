@@ -6,13 +6,16 @@
 </head>
 <body>
 <h1>Basic validation and auto-correction for form fields:</h1>
-<p>Validation routines return true or false for whether text entry passes the test.</p>
-<p>Auto-correct will auto-correct the input dependent on the rules.</p>
-<p>Initialised using _v prototype, or as an extension of the String object.</p>
-<p>This page serves to demo the usage.</p>
+<ul>
+<li>Validation routines return true or false for whether text entry passes the test.</li>
+<li>Auto-correct will auto-correct the input dependent on the rules.</li>
+<li>Initialised using _v prototype (_v.autocorrect(input,type)), or as an extension of the String object (string._autocorrect(type)).</li>
+<li>Easy to extend and and new rules.</li>
+<li>This page serves to demo the usage.</li>
+</ul>
 <h4>Validate (returns true or false):</h4>
 <input type="text" value="" id="input" placeholder="Enter test value">
-<select id="type">
+<select id="type" onChange="alert(document.getElementById('input').value._validate(document.getElementById('type').value))">
 	<option value="">Select test type..</option>
 	<option value="email">Email</option>
 	<option value="integer_any">Integer (including negatives and 0)</option>
@@ -28,15 +31,15 @@
 	<option value="userid">User Id (3-20 chars a-z, A-Z, 0-9 and _ only)</option>
 	<option value="password">Password (at least 6 chars, no more than 30, one upper case letter, one lower case letter, one digit)</option>
 	<option value="postcode">Postcode (UK)</option>
-	<option value="phone">Phone number</option>
+	<option value="phone">Phone number (loose match for non-country specific)</option>
 	<option value="creditcard">Credit / Debit card number</option>
 	<option value="futuredate">Date in the future (dd/mm/yyyy format only)</option>
 </select>
-<input type="submit" value="validate" onClick="alert(_v.validate(document.getElementById('input').value,document.getElementById('type').value))" />
+<input type="submit" value="validate" onClick="alert(document.getElementById('input').value._validate(document.getElementById('type').value))" />
 <h4>Auto-correct: (removes incorrect characters or otherwise formats the entry)</h4>
 
 <input type="text" value="" id="input2" placeholder="Enter test value">
-<select id="type2" onChange="document.getElementById('input2').value=_v.autocorrect(document.getElementById('input2').value,document.getElementById('type2').value)">
+<select id="type2" onChange="document.getElementById('input2').value=document.getElementById('input2').value._autocorrect(document.getElementById('type2').value)">
 	<option value="">Select test type..</option>
 	<option value="capitalize">To upper case</option>
 	<option value="to_lower_case">To lower case</option>
@@ -51,6 +54,6 @@
 	<option value="postcode">Post code formatter (UK)</option>
 </select>
 
-<input type="submit" value="Correct" onClick="document.getElementById('input2').value=_v.autocorrect(document.getElementById('input2').value,document.getElementById('type2').value)" />
+<input type="submit" value="Correct" onClick="document.getElementById('input2').value=document.getElementById('input2').value._autocorrect(document.getElementById('type2').value)" />
 </body>
 </html>
